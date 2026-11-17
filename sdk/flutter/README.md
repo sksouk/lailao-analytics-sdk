@@ -1,49 +1,70 @@
 # Lailao Analytics for Flutter
 
-Explicit screen, session and engagement event tracking for Lailao Analytics.
-
-## Install (after the first pub.dev release)
+## 1. Install
 
 ```sh
 flutter pub add lailao_analytics
 ```
 
-Or add `lailao_analytics: ^0.1.0` to dependencies and run `flutter pub get`.
-Before publication use a local `path:` dependency for testing.
+Version 0.2.0 requires Dart 3.7+ and Flutter 3.29+. Android requires Java 17,
+compile SDK 36+, Android Gradle Plugin 8.12.1+ and Gradle 8.13+ through device_info_plus.
+Use the stricter requirements of your installed Flutter version.
+
+## 2. Connect
 
 ```dart
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:lailao_analytics/lailao_analytics.dart';
 
-Future<void> main() async {
+final analytics = LailaoAnalytics(
+  project: 'YOUR_PROJECT_ID',
+  key: 'YOUR_SDK_WRITE_KEY',
+);
+
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  final analytics = LailaoAnalytics(
-    endpoint: 'https://analytics.lailaolab.com',
-    project: 'YOUR_PROJECT_ID',
-    key: 'YOUR_SDK_WRITE_KEY',
-    os: 'iOS', // or Android; optional
-  );
-  await analytics.sessionStart();
-  await analytics.screenView('Home');
-  // Launch your app; handle tracking errors without interrupting navigation.
+  analytics.start();
+  runApp(MaterialApp(
+    navigatorObservers: [analytics.navigatorObserver],
+    home: const HomePage(), // Your application's widget.
+  ));
 }
 ```
 
-Use project ID and SDK write key from your workspace. The key only permits event
-ingestion; do not embed Google client secrets or dashboard credentials. Android
-apps require the INTERNET permission in their release AndroidManifest.xml.
+The default endpoint is `https://analytics.lailaolab.com`. Override `endpoint`
+only for your own server/local testing. On a physical phone, localhost refers to
+that phone, not your development computer. Android release builds need
+`<uses-permission android:name="android.permission.INTERNET" />` in AndroidManifest.xml.
 
-Use `screenView` after navigation. Call `engagement(elapsed)` with actual
-foreground time measured by your app. This package does not install lifecycle
-observers, automatic routing, or device collection. `device` optionally accepts a
-`Future<Map<String, Object>>` containing your supported device metadata.
+`start()` is opt-in and idempotent: it tracks sessions and actual foreground time.
+Call `stop()` when stopping automatic tracking. The navigator observer tracks
+named PageRoutes. For Router APIs or unnamed screens, call
+`analytics.screenView('Home')` after navigation. Avoid tracking the same screen
+both manually and automatically. Existing explicit session/engagement methods
+remain available; do not combine them with automatic lifecycle tracking.
 
-Events include a random project-scoped visitor ID persisted using
-shared_preferences, event name, screen, Flutter platform, optional OS/device
-metadata and measured duration. The server observes IP. Inform users and request
-consent where required. Avoid personal data in screen/event names. Network
-failures throw; callers should catch them. Requests time out after ten seconds;
-there is no background retry queue.
+Metadata is automatic on every event: Android/iOS OS version, model, device type,
+app version/build, locale, timezone and display dimensions/pixel ratio. Android
+also includes manufacturer, brand and API level. No hardware identifier, phone
+number, contacts or GPS is collected. Missing plugins degrade to partial metadata.
+An optional `device` future can override automatic fields.
 
-Supported Flutter platforms depend on shared_preferences. Requires Dart 3.4+
-and Flutter 3.22+. License: MIT.
+## 3. Verify
+
+Open your project's SDK setup panel. It polls for the first real event and shows
+its timestamp, event name and platform. It does not send synthetic test events.
+
+## Custom events and error handling
+
+```dart
+await analytics.track('button_clicked', page: 'Home');
+```
+
+Explicit methods throw on failed delivery; catch errors to keep analytics from
+interrupting navigation. Automatic tracking reports failures through optional
+`onError`. Requests time out after ten seconds. This release does not persist or
+retry failed events offline. Obtain any consent your app requires before calling
+`start()` or event methods. Visitor IDs are random, project-scoped and stored in
+shared_preferences. The SDK key permits collection only, not dashboard access.
+
+License: MIT.
