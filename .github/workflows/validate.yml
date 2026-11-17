@@ -30,5 +30,7 @@ jobs:
         working-directory: sdk/flutter
       - run: flutter analyze
         working-directory: sdk/flutter
+      - run: flutter test
+        working-directory: sdk/flutter
       - run: flutter pub publish --dry-run
         working-directory: sdk/flutter
