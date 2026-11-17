@@ -1,0 +1,53 @@
+{
+  "name": "@lailao/analytics",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js",
+      "default": "./index.js"
+    },
+    "./react": {
+      "types": "./react.d.ts",
+      "import": "./react.js",
+      "default": "./react.js"
+    }
+  },
+  "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "react.js",
+    "react.d.ts",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "description": "Explicit event tracking for Lailao Analytics in Web, React and Next.js apps.",
+  "license": "MIT",
+  "homepage": "https://analytics.lailaolab.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sksouk/lailao-analytics-sdk.git",
+    "directory": "sdk/web"
+  },
+  "bugs": {
+    "url": "https://github.com/sksouk/lailao-analytics-sdk/issues"
+  },
+  "sideEffects": false,
+  "peerDependencies": {
+    "react": ">=18 <20"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  }
+}
