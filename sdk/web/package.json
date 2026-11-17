@@ -1,5 +1,5 @@
 {
-  "name": "@lailao/analytics",
+  "name": "@sksouk/lailao-analytics",
   "version": "0.1.0",
   "type": "module",
   "exports": {

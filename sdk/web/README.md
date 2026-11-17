@@ -4,14 +4,14 @@ Small ESM client for explicit event tracking in browsers, React and Next.js.
 Includes TypeScript types and an optional React route component. No runtime
 network dependencies, install scripts, automatic page tracking, or cookies.
 
-## Install (after the first npm release)
+## Install
 
 ```sh
-npm install @lailao/analytics
+npm install @sksouk/lailao-analytics
 ```
 
 ```js
-import {createAnalytics} from '@lailao/analytics';
+import {createAnalytics} from '@sksouk/lailao-analytics';
 const analytics = createAnalytics({
   project: 'YOUR_PROJECT_ID',
   key: 'YOUR_SDK_WRITE_KEY',
@@ -30,8 +30,8 @@ Create one client outside your component, then mount once inside your router:
 
 ```jsx
 import {useLocation} from 'react-router-dom';
-import {createAnalytics} from '@lailao/analytics';
-import {AnalyticsPageView} from '@lailao/analytics/react';
+import {createAnalytics} from '@sksouk/lailao-analytics';
+import {AnalyticsPageView} from '@sksouk/lailao-analytics/react';
 const analytics = createAnalytics({project: 'YOUR_PROJECT_ID', key: 'YOUR_SDK_WRITE_KEY'});
 export function Tracking() {
   const {pathname} = useLocation();
@@ -44,8 +44,8 @@ export function Tracking() {
 ```jsx
 'use client';
 import {usePathname} from 'next/navigation';
-import {createAnalytics} from '@lailao/analytics';
-import {AnalyticsPageView} from '@lailao/analytics/react';
+import {createAnalytics} from '@sksouk/lailao-analytics';
+import {AnalyticsPageView} from '@sksouk/lailao-analytics/react';
 const analytics = createAnalytics({project: 'YOUR_PROJECT_ID', key: 'YOUR_SDK_WRITE_KEY'});
 export default function Tracking() {
   const pathname = usePathname();
